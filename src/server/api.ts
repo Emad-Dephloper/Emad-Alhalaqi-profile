@@ -186,11 +186,17 @@ api.get('/admin/stats', requireAuth, async (req, res) => {
 
 api.post('/logs', (req, res) => {
   const { error, context } = req.body;
+  const errorStr = typeof error === 'string' ? error : (error?.message || JSON.stringify(error || ''));
+  if (
+    errorStr.includes('WebSocket') ||
+    errorStr.includes('@vite/client') ||
+    errorStr.includes('websocket')
+  ) {
+    return res.json({ success: true });
+  }
   logError(error, context || 'Client Error');
   res.json({ success: true });
 });
-
-export { api };
 
 // --- Analytics ---
 api.post('/analytics/track', async (req, res) => {
@@ -258,3 +264,5 @@ api.get('/admin/analytics', requireAuth, async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch analytics' });
   }
 });
+
+export { api };
