@@ -1,5 +1,6 @@
 import express from "express";
 import path from "path";
+import cors from "cors";
 import helmet from "helmet";
 import hpp from "hpp";
 import rateLimit from "express-rate-limit";
@@ -19,6 +20,11 @@ async function startServer() {
   app.set('trust proxy', 1);
 
   // Security Middlewares
+  app.use(cors({
+    origin: true,
+    credentials: true,
+  }));
+
   app.use(helmet({
     contentSecurityPolicy: false, // Disabled to allow Vite and external images/scripts
     crossOriginEmbedderPolicy: false,

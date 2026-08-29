@@ -1,0 +1,3 @@
+# Netlify Redirects file for Single Page Applications (SPA)
+# Ensures all routes (e.g. /about, /portfolio, /admin) fallback to index.html without 404
+/*    /index.html   200

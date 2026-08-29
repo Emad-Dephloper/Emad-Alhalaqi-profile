@@ -10,7 +10,11 @@ export const fetchApi = async (endpoint: string, options: RequestInit = {}) => {
   
   headers.set('Content-Type', 'application/json');
 
-  const response = await fetch(`/api${endpoint}`, {
+  const rawBaseUrl = (import.meta.env.VITE_API_URL || '').replace(/\/+$/, '');
+  const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+  const url = `${rawBaseUrl}/api${path}`;
+
+  const response = await fetch(url, {
     ...options,
     headers
   });

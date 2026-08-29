@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "description": "",
+  "name": "Emad Alhalaqi Portfolio",
+  "description": "معرض أعمال ومنصة مهندس البرمجيات ومطور أودو عماد الحلقي مع لوحة تحكم لإدارة المحتوى وتتبع الزوار",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

@@ -223,12 +223,14 @@ api.get('/admin/analytics', requireAuth, async (req, res) => {
     const totalViews = allViews.length;
     
     // Views per path
-    const pathCounts = {};
-    const dateCounts = {};
+    const pathCounts: Record<string, number> = {};
+    const dateCounts: Record<string, number> = {};
     
-    allViews.forEach(view => {
+    allViews.forEach((view: any) => {
       // Path stats
-      pathCounts[view.path] = (pathCounts[view.path] || 0) + 1;
+      if (view.path) {
+        pathCounts[view.path] = (pathCounts[view.path] || 0) + 1;
+      }
       
       // Date stats (last 7 days etc)
       if (view.createdAt) {
@@ -239,8 +241,8 @@ api.get('/admin/analytics', requireAuth, async (req, res) => {
     });
     
     const topPages = Object.entries(pathCounts)
-      .map(([path, views]) => ({ path, views }))
-      .sort((a, b) => (b.views) - (a.views))
+      .map(([path, views]) => ({ path, views: Number(views) }))
+      .sort((a, b) => b.views - a.views)
       .slice(0, 10);
       
     const viewsByDate = Object.entries(dateCounts)
