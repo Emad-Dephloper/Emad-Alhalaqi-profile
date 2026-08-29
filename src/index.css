@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: "IBM Plex Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  --color-brand-50: #eff6ff;
+  --color-brand-100: #dbeafe;
+  --color-brand-500: #3b82f6;
+  --color-brand-600: #2563eb;
+  --color-brand-900: #1e3a8a;
+  
+  --color-dark-bg: #09090b;
+  --color-dark-card: #18181b;
+  --color-dark-border: rgba(255, 255, 255, 0.1);
+}
+
+@layer base {
+  body {
+    @apply bg-white text-zinc-900 dark:bg-[#09090b] dark:text-white transition-colors duration-300 antialiased;
+    font-family: var(--font-sans);
+  }
+}
+
+.glass {
+  @apply bg-white dark:bg-[#18181b] border border-zinc-200 dark:border-white/10;
+}
