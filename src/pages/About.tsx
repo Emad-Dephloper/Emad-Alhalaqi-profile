@@ -24,7 +24,9 @@ export default function About() {
         setSettings(formatted);
       }),
       fetchApi('/skills').then(data => setSkills(data.filter((s: any) => s.visible)))
-    ]).finally(() => setLoading(false));
+    ])
+    .catch(console.error)
+    .finally(() => setLoading(false));
   }, []);
 
   const aboutData = settings.about?.title ? settings.about : t.about;

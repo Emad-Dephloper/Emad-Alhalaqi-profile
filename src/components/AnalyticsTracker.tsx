@@ -12,7 +12,8 @@ export function AnalyticsTracker() {
         method: 'POST',
         body: JSON.stringify({ path: location.pathname })
       }).catch(err => {
-        console.error('Failed to track analytics', err);
+        // Non-blocking warning for background page view tracking
+        console.warn('Analytics tracking skipped:', err?.message || err);
       });
     }
   }, [location.pathname]);

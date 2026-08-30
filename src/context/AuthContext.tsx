@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, onAuthStateChanged, signOut, signInWithPopup } from 'firebase/auth';
 import { auth, googleAuthProvider } from '../lib/firebase';
+import { fetchApi } from '../lib/api';
 
 interface AuthContextType {
   user: User | null;
@@ -28,13 +29,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (currentUser) {
           // Attempt to sync the user to the database
           try {
-              const token = await currentUser.getIdToken();
-              await fetch('/api/auth/sync', {
-                  method: 'POST',
-                  headers: {
-                      'Authorization': `Bearer ${token}`
-                  }
-              });
+              await fetchApi('/auth/sync', { method: 'POST' });
           } catch (e) {
               console.error('Failed to sync user', e);
           }
