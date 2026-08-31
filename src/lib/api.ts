@@ -1,4 +1,5 @@
 import { auth } from './firebase.ts';
+import { onAuthStateChanged, User } from 'firebase/auth';
 
 const getApiUrl = (endpoint: string): string => {
   const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
@@ -19,12 +20,32 @@ const getApiUrl = (endpoint: string): string => {
   return `/api${path}`;
 };
 
+const getCurrentUser = async (): Promise<User | null> => {
+  if (auth.currentUser) return auth.currentUser;
+
+  return new Promise((resolve) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      unsubscribe();
+      resolve(user);
+    });
+    setTimeout(() => {
+      unsubscribe();
+      resolve(auth.currentUser);
+    }, 1200);
+  });
+};
+
 export const fetchApi = async (endpoint: string, options: RequestInit = {}) => {
   const headers = new Headers(options.headers || {});
   
-  if (auth.currentUser) {
-    const token = await auth.currentUser.getIdToken();
-    headers.set('Authorization', `Bearer ${token}`);
+  const user = await getCurrentUser();
+  if (user) {
+    try {
+      const token = await user.getIdToken();
+      headers.set('Authorization', `Bearer ${token}`);
+    } catch (tokenErr) {
+      console.warn('Could not get fresh auth token:', tokenErr);
+    }
   }
   
   headers.set('Content-Type', 'application/json');
