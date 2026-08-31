@@ -1,22 +1,34 @@
 import { auth } from './firebase.ts';
 import { onAuthStateChanged, User } from 'firebase/auth';
 
+const DEFAULT_BACKEND_URL = 'https://ais-pre-rd7mqpfhsvwzyu2orptsbo-882351084917.europe-west2.run.app';
+
 const getApiUrl = (endpoint: string): string => {
   const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
   const rawEnv = (import.meta.env.VITE_API_URL || '').trim();
 
-  // Only use VITE_API_URL if it is a valid absolute HTTP/HTTPS URL
+  // 1. Explicit VITE_API_URL from environment
   if (rawEnv.startsWith('http://') || rawEnv.startsWith('https://')) {
     try {
       const parsed = new URL(rawEnv);
       const cleanPath = parsed.pathname.replace(/\/+$/, '').replace(/\/api$/, '');
       return `${parsed.origin}${cleanPath}/api${path}`;
     } catch {
-      // If URL parsing fails, fall back to relative path
+      // Fallback
     }
   }
 
-  // Default to relative /api endpoint
+  // 2. If running on Netlify or custom third-party domain, call the live backend directly
+  if (
+    typeof window !== 'undefined' &&
+    (window.location.hostname.endsWith('.netlify.app') ||
+     window.location.hostname.endsWith('.vercel.app') ||
+     window.location.hostname.endsWith('.pages.dev'))
+  ) {
+    return `${DEFAULT_BACKEND_URL}/api${path}`;
+  }
+
+  // 3. Default to relative /api endpoint for local dev and Cloud Run host
   return `/api${path}`;
 };
 
