@@ -47,9 +47,9 @@ export default function PostsAdmin() {
       setIsEditing(false);
       setCurrentPost({});
       fetchPosts();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      alert('Failed to save post. Ensure slug is unique.');
+      alert(language === 'ar' ? `فشل في حفظ المقال: ${e?.message || 'تأكد من أن الرابط التعريفي (slug) فريد'}` : `Failed to save post: ${e?.message || 'Ensure slug is unique'}`);
     }
   };
 

@@ -47,9 +47,9 @@ export default function TestimonialsAdmin() {
       setIsEditing(false);
       setCurrentTestimonial({});
       fetchTestimonials();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      alert('Failed to save testimonial.');
+      alert(language === 'ar' ? `فشل في حفظ التوصية: ${e?.message || 'يرجى التحقق من المدخلات'}` : `Failed to save testimonial: ${e?.message || 'Please check inputs'}`);
     }
   };
 

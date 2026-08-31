@@ -36,10 +36,10 @@ export default function SettingsAdmin() {
       await fetchApi('/admin/settings/contact', { method: 'PUT', body: JSON.stringify({ value: settings.contact || {} }) });
       await fetchApi('/admin/settings/profileImage', { method: 'PUT', body: JSON.stringify({ value: settings.profileImage || '' }) });
       await fetchApi('/admin/settings/cvFile', { method: 'PUT', body: JSON.stringify({ value: settings.cvFile || '' }) });
-      alert('Settings saved successfully!');
-    } catch (e) {
+      alert(language === 'ar' ? 'تم حفظ الإعدادات بنجاح!' : 'Settings saved successfully!');
+    } catch (e: any) {
       console.error(e);
-      alert('Failed to save settings.');
+      alert(language === 'ar' ? `فشل في حفظ الإعدادات: ${e?.message || 'يرجى المحاولة مجدداً'}` : `Failed to save settings: ${e?.message || 'Please try again'}`);
     }
   };
 

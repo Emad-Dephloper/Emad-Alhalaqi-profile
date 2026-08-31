@@ -45,9 +45,9 @@ export default function SkillsAdmin() {
       setIsEditing(false);
       setCurrentSkill({});
       fetchSkills();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      alert('Failed to save skill.');
+      alert(language === 'ar' ? `فشل في حفظ المهارة: ${e?.message || 'يرجى التحقق من المدخلات'}` : `Failed to save skill: ${e?.message || 'Please check inputs'}`);
     }
   };
 

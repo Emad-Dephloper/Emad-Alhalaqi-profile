@@ -45,9 +45,9 @@ export default function ServicesAdmin() {
       setIsEditing(false);
       setCurrentService({});
       fetchServices();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      alert('Failed to save service.');
+      alert(language === 'ar' ? `فشل في حفظ الخدمة: ${e?.message || 'يرجى التحقق من المدخلات'}` : `Failed to save service: ${e?.message || 'Please check inputs'}`);
     }
   };
 

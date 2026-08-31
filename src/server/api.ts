@@ -89,21 +89,49 @@ api.get('/testimonials', async (req, res) => {
   res.json(data);
 });
 
+const sanitizeBody = (body: Record<string, any>) => {
+  const sanitized: Record<string, any> = {};
+  for (const [key, value] of Object.entries(body)) {
+    if (value === '') {
+      if (['date', 'startDate', 'endDate', 'scheduledPublishing', 'level', 'orderIndex', 'rating'].includes(key)) {
+        sanitized[key] = null;
+      } else {
+        sanitized[key] = '';
+      }
+    } else if (['date', 'startDate', 'endDate', 'scheduledPublishing'].includes(key) && typeof value === 'string') {
+      const parsed = new Date(value);
+      sanitized[key] = isNaN(parsed.getTime()) ? null : parsed;
+    } else if (['level', 'orderIndex', 'rating'].includes(key) && typeof value === 'string' && value.trim() !== '') {
+      const parsedNum = parseInt(value, 10);
+      sanitized[key] = isNaN(parsedNum) ? 0 : parsedNum;
+    } else {
+      sanitized[key] = value;
+    }
+  }
+  return sanitized;
+};
+
 // Admin endpoints
 const createCrudEndpoints = (router: Router, path: string, table: any) => {
   router.get(`/admin/${path}`, requireAuth, async (req, res) => {
-    const data = await db.select().from(table);
-    res.json(data);
+    try {
+      const data = await db.select().from(table);
+      res.json(data);
+    } catch (err: any) {
+      logError(err, `Error fetching from ${path}`);
+      res.status(500).json({ error: err?.message || 'Database error' });
+    }
   });
 
   router.post(`/admin/${path}`, requireAuth, async (req, res) => {
     const { id, createdAt, updatedAt, ...body } = req.body;
     try {
-      const data = await db.insert(table).values(body).returning();
+      const cleanData = sanitizeBody(body);
+      const data = await db.insert(table).values(cleanData).returning();
       res.json(data[0]);
-    } catch (err) {
+    } catch (err: any) {
       logError(err, `Error inserting into ${path}`);
-      res.status(500).json({ error: 'Database error' });
+      res.status(500).json({ error: err?.message || 'Database error' });
     }
   });
 
@@ -111,18 +139,24 @@ const createCrudEndpoints = (router: Router, path: string, table: any) => {
     const idParam = parseInt(req.params.id);
     const { id, createdAt, updatedAt, ...body } = req.body;
     try {
-      const data = await db.update(table).set(body).where(eq(table.id, idParam)).returning();
+      const cleanData = sanitizeBody(body);
+      const data = await db.update(table).set(cleanData).where(eq(table.id, idParam)).returning();
       res.json(data[0]);
-    } catch (err) {
+    } catch (err: any) {
       logError(err, `Error updating ${path}`);
-      res.status(500).json({ error: 'Database error' });
+      res.status(500).json({ error: err?.message || 'Database error' });
     }
   });
 
   router.delete(`/admin/${path}/:id`, requireAuth, async (req, res) => {
     const id = parseInt(req.params.id);
-    await db.delete(table).where(eq(table.id, id));
-    res.json({ success: true });
+    try {
+      await db.delete(table).where(eq(table.id, id));
+      res.json({ success: true });
+    } catch (err: any) {
+      logError(err, `Error deleting from ${path}`);
+      res.status(500).json({ error: err?.message || 'Database error' });
+    }
   });
 };
 

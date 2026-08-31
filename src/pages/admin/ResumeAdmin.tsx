@@ -56,8 +56,8 @@ export default function ResumeAdmin() {
       setExpForm({ id: null, role: '', company: '', location: '', period: '', description: '' });
       setIsEditingExp(false);
       fetchData();
-    } catch (error) {
-      toast.error('Failed to save experience');
+    } catch (error: any) {
+      toast.error(error?.message || 'Failed to save experience');
     }
   };
 
@@ -67,8 +67,8 @@ export default function ResumeAdmin() {
       await fetchApi(`/admin/experience/${id}`, { method: 'DELETE' });
       toast.success('Experience deleted');
       fetchData();
-    } catch (error) {
-      toast.error('Failed to delete experience');
+    } catch (error: any) {
+      toast.error(error?.message || 'Failed to delete experience');
     }
   };
 
@@ -91,8 +91,8 @@ export default function ResumeAdmin() {
       setEduForm({ id: null, degree: '', university: '', location: '', period: '', description: '' });
       setIsEditingEdu(false);
       fetchData();
-    } catch (error) {
-      toast.error('Failed to save education');
+    } catch (error: any) {
+      toast.error(error?.message || 'Failed to save education');
     }
   };
 
@@ -102,8 +102,8 @@ export default function ResumeAdmin() {
       await fetchApi(`/admin/education/${id}`, { method: 'DELETE' });
       toast.success('Education deleted');
       fetchData();
-    } catch (error) {
-      toast.error('Failed to delete education');
+    } catch (error: any) {
+      toast.error(error?.message || 'Failed to delete education');
     }
   };
 

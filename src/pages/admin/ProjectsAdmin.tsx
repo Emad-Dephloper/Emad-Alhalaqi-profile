@@ -47,9 +47,9 @@ export default function ProjectsAdmin() {
       setIsEditing(false);
       setCurrentProject({});
       fetchProjects();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      alert('Failed to save project. Make sure slug is unique.');
+      alert(language === 'ar' ? `فشل في حفظ المشروع: ${e?.message || 'تأكد من صحة البيانات'}` : `Failed to save project: ${e?.message || 'Ensure slug is unique'}`);
     }
   };
 

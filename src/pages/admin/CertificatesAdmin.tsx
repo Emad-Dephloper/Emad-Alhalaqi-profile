@@ -47,9 +47,9 @@ export default function CertificatesAdmin() {
       setIsEditing(false);
       setCurrentCert({});
       fetchCertificates();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      alert('Failed to save certificate.');
+      alert(language === 'ar' ? `فشل في حفظ الشهادة: ${e?.message || 'يرجى التحقق من المدخلات'}` : `Failed to save certificate: ${e?.message || 'Please check inputs'}`);
     }
   };
 

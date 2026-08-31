@@ -46,9 +46,9 @@ export default function SocialLinksAdmin() {
       setIsEditing(false);
       setCurrentLink({});
       fetchLinks();
-    } catch (e) {
+    } catch (e: any) {
       console.error(e);
-      alert('Failed to save social link.');
+      alert(language === 'ar' ? `فشل في حفظ الرابط: ${e?.message || 'يرجى التحقق من المدخلات'}` : `Failed to save social link: ${e?.message || 'Please verify inputs'}`);
     }
   };
 
