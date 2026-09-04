@@ -1,6 +1,6 @@
 # Netlify Redirects file
 # 1. Proxy all /api/* requests to the live backend server
-/api/*  https://ais-pre-rd7mqpfhsvwzyu2orptsbo-882351084917.europe-west2.run.app/api/:splat  200
+/api/*  https://emad-6414.ai.studio/api/:splat  200
 
 # 2. SPA fallback for frontend routes (e.g. /about, /portfolio, /admin)
 /*  /index.html  200
